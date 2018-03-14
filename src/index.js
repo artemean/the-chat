@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Socket from 'socket.io-client';
 
+const socket = io();
+
 class App extends React.Component {
   state = {
     message: '',
@@ -10,15 +12,16 @@ class App extends React.Component {
 
   componentDidMount() {
     // this.socket = Socket();
-    this.socket = io();
 
-    this.socket.on('new message', (message) => {
+    socket.on('new message', (message) => {
       console.log(message);
 
       this.setState((prevState) => ({
         received: prevState.received.concat(message)
       }))
-    })
+    });
+
+    socket.emit('new message', 'hihihiHIHI11');
   }
 
   onChange = (e) => {
@@ -34,8 +37,8 @@ class App extends React.Component {
   onKeyDown = (e) => {
     if ((e.key === 'Enter') && (e.target.value !== '')) {
       this.setState((prevState) => {
-
-        this.socket.emit('new message', prevState.message);
+        console.log(prevState.message);
+        socket.emit('new message', prevState.message);
         return {
           message: ''
         }
