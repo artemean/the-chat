@@ -1,19 +1,19 @@
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 const port = process.env.PORT || 3000;
 
 module.exports = {
-  mode: 'development',
-  entry: ['react-hot-loader/patch', './src/index.js'],
+  mode: 'production',
+  watch: true,
+  entry: ['./src/index.js'],
   output: {
-    filename: 'bundle.[hash].js',
-    publicPath: '/'
+    path: path.resolve(__dirname, 'public'),
+    filename: 'bundle.js'
   },
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json']
   },
-  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -38,19 +38,5 @@ module.exports = {
         ]
       }
     ]
-  },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new HtmlWebpackPlugin({
-      template: 'public/index.html',
-      favicon: 'public/favicon.ico'
-    })
-  ],
-  devServer: {
-    host: 'localhost',
-    port: port,
-    historyApiFallback: true,
-    hot: true,
-    open: true
   }
 };
