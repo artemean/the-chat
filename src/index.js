@@ -2,57 +2,104 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Socket from 'socket.io-client';
 
-const socket = io();
+import LoginBox from './components/LoginBox'
+import ChatBox from './components/ChatBox'
+
+const socket = Socket();
 
 class App extends React.Component {
   state = {
-    message: '',
-    received: []
+    username: '',
+    currentMessage: '',
+    connected: false,
+    messages: [],
+    numUsers: 0
   }
 
   componentDidMount() {
-    // this.socket = Socket();
-
     socket.on('new message', (message) => {
-      console.log(message);
-
       this.setState((prevState) => ({
-        received: prevState.received.concat(message)
+        messages: prevState.messages.concat(message)
       }))
     });
 
-    socket.emit('new message', 'hihihiHIHI11');
+    socket.on('user joined', (data) => {
+      this.addMessage(`${data.username} joined!`);
+      this.addParticipantsMessage(data);
+    });
+
+    socket.on('login', (data) => {
+      this.setState({
+        connected: true
+      });
+      // Display the welcome message
+      let message = "Welcome to THE Chat – ";
+      this.addMessage(message)
+      this.addParticipantsMessage(data);
+    });
   }
 
-  onChange = (e) => {
+  onLoginChange = (event) => {
     this.setState({
-      message: e.target.value
+      username: event.target.value
     })
-  };
-
-  renderMessages(messages) {
-    return messages.length > 0 ? messages.map((message, i) => <div key={i}>{message.message}</div>) : null
   }
 
-  onKeyDown = (e) => {
-    if ((e.key === 'Enter') && (e.target.value !== '')) {
-      this.setState((prevState) => {
-        console.log(prevState.message);
-        socket.emit('new message', prevState.message);
+  onLoginKeyDown = (event) => {
+    if ((event.key === 'Enter') && (event.target.value !== '')) {
+      socket.emit('add user', this.state.username);
+    }
+  }
+
+  onMessageChange = (event) => {
+    this.setState({
+      currentMessage: event.target.value
+    })
+  }
+
+  onMessageKeyDown = (event) => {
+    if ((event.key === 'Enter') && (event.target.value !== '')) {
+      this.setState(prevState => {
+        socket.emit('new message', prevState.currentMessage);
         return {
-          message: ''
+          messages: prevState.messages.concat(prevState.currentMessage),
+          currentMessage: ''
         }
       })
     }
   }
 
+  addMessage(message) {
+    this.setState((prevState) => ({
+      messages: prevState.messages.concat(message)
+    }))
+  }
+
+  addParticipantsMessage(data) {
+    let message = '';
+    if (data.numUsers === 1) {
+      message += "there's 1 participant";
+    } else {
+      message += "there are " + data.numUsers + " participants";
+    }
+    this.addMessage(message);
+  }
+
   render() {
     return (
       <div>
-        Chat {this.renderMessages(this.state.received)}
-        <div>
-          <input type="text" onChange={this.onChange} onKeyDown={this.onKeyDown} value={this.state.message}/>
-        </div>
+        {this.state.connected ?
+          <ChatBox
+            messages={this.state.messages}
+            onMessageChange={this.onMessageChange}
+            onMessageKeyDown={this.onMessageKeyDown}
+            currentMessage={this.state.currentMessage}
+            numUsers={this.state.numUsers}
+          /> :
+          <LoginBox
+            onLoginChange={this.onLoginChange}
+            onLoginKeyDown={this.onLoginKeyDown}
+          />}
       </div>
     )
   }

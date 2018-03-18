@@ -3,7 +3,7 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+var io = require('socket.io')(server, { wsEngine: 'ws' });
 var port = process.env.PORT || 3030;
 
 server.listen(port, function () {
