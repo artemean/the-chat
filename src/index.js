@@ -97,8 +97,8 @@ class App extends React.Component {
             numUsers={this.state.numUsers}
           /> :
           <LoginBox
-            onLoginChange={this.onLoginChange}
-            onLoginKeyDown={this.onLoginKeyDown}
+            onChange={this.onLoginChange}
+            onKeyDown={this.onLoginKeyDown}
           />}
       </div>
     )

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { List, Input } from 'semantic-ui-react';
 
 function ChatBox(props) {
   function renderMessages(messages) {
     return messages.map((message, i) => {
-      console.log(message);
       const text = typeof message === 'string' ? message : message.message;
       return <div className="chat-box__message" key={i}>{text}</div>;
     });
@@ -14,10 +14,10 @@ function ChatBox(props) {
     <div className="chat-box">
       {/* <div className="chat-box__user-count">People in chat: {props.numUsers}</div> */}
       <div className="chat-box__messages">
-        {renderMessages(props.messages)}
+        {/* {renderMessages(props.messages)} */}
+        <List items={props.messages} />
       </div>
-      <input
-        type="text"
+      <Input
         onChange={props.onMessageChange}
         onKeyDown={props.onMessageKeyDown}
         value={props.currentMessage}
