@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Container } from 'semantic-ui-react';
 import Socket from 'socket.io-client';
 
 import LoginBox from './components/LoginBox'
@@ -51,6 +52,10 @@ class App extends React.Component {
     }
   }
 
+  onClearLogin = (event) => {
+    this.setState({username: ''});
+  }
+
   onMessageChange = (event) => {
     this.setState({
       currentMessage: event.target.value
@@ -87,7 +92,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
+      <Container className="the-chat">
         {this.state.connected ?
           <ChatBox
             messages={this.state.messages}
@@ -99,8 +104,11 @@ class App extends React.Component {
           <LoginBox
             onChange={this.onLoginChange}
             onKeyDown={this.onLoginKeyDown}
+            clearable
+            onClearLogin={this.onClearLogin}
+            value={this.state.username}
           />}
-      </div>
+      </Container>
     )
   }
 }
