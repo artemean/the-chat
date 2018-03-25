@@ -4,28 +4,27 @@ import { Input } from 'semantic-ui-react';
 import ClearIcon from './ClearIcon';
 
 function LoginBox(props) {
+  const prepareProps = {...props};
   if (props.clearable) {
-    props.icon=<ClearIcon onClick={props.onClearLogin} />
+    prepareProps.icon=<ClearIcon onAClick={props.onClearLogin} />;
+    delete prepareProps.clearable;
   }
+  delete prepareProps.onClearLogin;
   return (
     <div className="login-box">
       <h1>Please introduce yourself</h1>
       <Input
-        {...props}
+        {...prepareProps}
       />
     </div>
   );
 }
 
 LoginBox.propTypes = {
-  onLoginChange: PropTypes.func,
-  onLoginKeyDown: PropTypes.func,
   clearable: PropTypes.bool,
 };
 
 LoginBox.defaultProps = {
-  onLoginChange: () => {},
-  onLoginKeyDown: () => {},
   clearable: false,
 };
 

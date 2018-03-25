@@ -5,7 +5,7 @@ function ClearIcon(props) {
   return (
     <div
       className="clear-icon"
-      onClick={props.onClick}
+      onClick={props.onAClick}
       role="button"
       onKeyDown={props.onKeyDown}
       tabIndex={0}

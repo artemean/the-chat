@@ -23,10 +23,13 @@ function ChatBox(props) {
 }
 
 ChatBox.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.string),
+  messages: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object
+  ])),
   onMessageChange: PropTypes.func,
   onMessageKeyDown: PropTypes.func,
-  currentMessage: PropTypes.func,
+  currentMessage: PropTypes.string,
 };
 
 ChatBox.defaultProps = {
